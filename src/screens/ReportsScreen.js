@@ -14,14 +14,17 @@ import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import TreeCompensationCard from '../components/TreeCompensationCard';
 import { COLORS } from '../constants/colors';
 import storageService from '../services/storageService';
+import treeService from '../services/treeService';
 
 const screenWidth = Dimensions.get('window').width;
 
 const ReportsScreen = () => {
   const [monthlyData, setMonthlyData] = useState([]);
   const [categoryData, setCategoryData] = useState(null);
+  const [treesNeeded, setTreesNeeded] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,17 +41,30 @@ const ReportsScreen = () => {
         transport_land: 0,
         transport_air: 0,
         energy: 0,
-        gas: 0
+        gas: 0,
+        domestic_activities: 0,
+        waste: 0
       };
 
       data.forEach(month => {
-        totals.transport_land += month.breakdown.transport_land;
-        totals.transport_air += month.breakdown.transport_air;
-        totals.energy += month.breakdown.energy;
-        totals.gas += month.breakdown.gas;
+        totals.transport_land += month.breakdown.transport_land || 0;
+        totals.transport_air += month.breakdown.transport_air || 0;
+        totals.energy += month.breakdown.energy || 0;
+        totals.gas += month.breakdown.gas || 0;
+        totals.domestic_activities += month.breakdown.domestic_activities || 0;
+        totals.waste += month.breakdown.waste || 0;
       });
 
       setCategoryData(totals);
+
+      // Calcular árvores necessárias baseado no último mês
+      if (data.length > 0) {
+        const lastMonthEmission = data[data.length - 1].total;
+        if (lastMonthEmission > 0) {
+          const treeData = treeService.calculateTreesForMonthly(lastMonthEmission);
+          setTreesNeeded(treeData);
+        }
+      }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     }
@@ -80,6 +96,8 @@ const ReportsScreen = () => {
                 <th>Transporte Aéreo</th>
                 <th>Energia</th>
                 <th>Gás</th>
+                <th>Atividades Domésticas</th>
+                <th>Resíduos/Reciclagem</th>
               </tr>
               ${monthlyData.map(month => `
                 <tr>
@@ -89,6 +107,8 @@ const ReportsScreen = () => {
                   <td>${month.breakdown.transport_air.toFixed(2)}</td>
                   <td>${month.breakdown.energy.toFixed(2)}</td>
                   <td>${month.breakdown.gas.toFixed(2)}</td>
+                  <td>${(month.breakdown.domestic_activities || 0).toFixed(2)}</td>
+                  <td>${(month.breakdown.waste || 0).toFixed(2)}</td>
                 </tr>
               `).join('')}
             </table>
@@ -147,6 +167,20 @@ const ReportsScreen = () => {
       name: 'Gás',
       population: categoryData.gas,
       color: COLORS.chart.gas,
+      legendFontColor: COLORS.text,
+      legendFontSize: 12
+    },
+    {
+      name: 'Atividades Domésticas',
+      population: categoryData.domestic_activities,
+      color: COLORS.chart.domestic,
+      legendFontColor: COLORS.text,
+      legendFontSize: 12
+    },
+    {
+      name: 'Resíduos/Reciclagem',
+      population: Math.abs(categoryData.waste), // Usar valor absoluto para exibição
+      color: COLORS.chart.waste,
       legendFontColor: COLORS.text,
       legendFontSize: 12
     }
@@ -235,6 +269,14 @@ const ReportsScreen = () => {
             ))}
           </Card>
 
+          {/* Compensação por Árvores */}
+          {treesNeeded && (
+            <View style={styles.treeSection}>
+              <Text style={styles.sectionTitle}>🌳 Compensação Ambiental</Text>
+              <TreeCompensationCard treesData={treesNeeded} />
+            </View>
+          )}
+
           {/* Botões de Exportação */}
           <View style={styles.exportSection}>
             <Text style={styles.sectionTitle}>Exportar Dados</Text>
@@ -316,6 +358,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.primary,
+  },
+  treeSection: {
+    paddingHorizontal: 20,
+    paddingTop: 0,
+    paddingBottom: 10,
   },
   exportSection: {
     padding: 20,

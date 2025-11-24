@@ -23,6 +23,8 @@ export const COLORS = {
     energy: '#36A2EB',
     gas: '#FFCE56',
     air: '#4BC0C0',
+    domestic: '#9966FF',
+    waste: '#4CAF50',
     background: 'rgba(255, 255, 255, 0.9)'
   }
 };

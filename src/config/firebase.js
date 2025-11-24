@@ -6,7 +6,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, CACHE_SIZE_UNLIMITED } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAQWmMZu-Q12cSyIaghO311UIgstlJLRh0",
@@ -23,7 +23,18 @@ const app = initializeApp(firebaseConfig);
 
 // Inicializar serviços
 export const auth = getAuth(app);
-export const db = getFirestore(app);
 
+// Inicializar Firestore com configuração de persistência offline
+let db;
+try {
+    db = initializeFirestore(app, {
+        cacheSizeBytes: CACHE_SIZE_UNLIMITED
+    });
+} catch (error) {
+    // Se já foi inicializado, apenas obter a instância
+    db = getFirestore(app);
+}
+
+export { db };
 export default app;
 

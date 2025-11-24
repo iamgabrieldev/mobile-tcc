@@ -15,6 +15,8 @@ import HomeScreen from '../screens/HomeScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 import TipsScreen from '../screens/TipsScreen';
+import RankingScreen from '../screens/RankingScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -76,6 +78,26 @@ const TabNavigator = () => {
           tabBarLabel: 'Dicas',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="lightbulb-on" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Ranking"
+        component={RankingScreen}
+        options={{
+          tabBarLabel: 'Ranking',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="trophy" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" size={size} color={color} />
           ),
         }}
       />

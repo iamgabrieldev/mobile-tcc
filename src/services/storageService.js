@@ -100,7 +100,9 @@ class StorageService {
               transport_land: 0,
               transport_air: 0,
               energy: 0,
-              gas: 0
+              gas: 0,
+              domestic_activities: 0,
+              waste: 0
             }
           };
         }
@@ -133,14 +135,16 @@ class StorageService {
     try {
       const records = await this.getDailyRecords();
       
-      let csv = 'Data,Total CO₂ (kg),Transporte Terrestre,Transporte Aéreo,Energia,Gás\n';
+      let csv = 'Data,Total CO₂ (kg),Transporte Terrestre,Transporte Aéreo,Energia,Gás,Atividades Domésticas,Resíduos/Reciclagem\n';
       
       records.forEach(record => {
         csv += `${record.date},${record.emissions.total},`;
         csv += `${record.emissions.breakdown.transport_land},`;
         csv += `${record.emissions.breakdown.transport_air},`;
         csv += `${record.emissions.breakdown.energy},`;
-        csv += `${record.emissions.breakdown.gas}\n`;
+        csv += `${record.emissions.breakdown.gas},`;
+        csv += `${record.emissions.breakdown.domestic_activities || 0},`;
+        csv += `${record.emissions.breakdown.waste || 0}\n`;
       });
       
       return csv;

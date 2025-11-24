@@ -2,6 +2,18 @@
 
 Aplicativo móvel desenvolvido com React Native e Expo para calcular e monitorar a pegada de carbono pessoal baseado em hábitos diários.
 
+## 🎉 **NOVIDADES! Versão 2.0**
+
+🏆 **Ranking Global** - Compete com outros usuários e veja quem está reduzindo mais CO₂!
+
+🤖 **Análise por IA** - Receba insights personalizados sobre seus hábitos usando Google Gemini Pro!
+
+🌳 **Cálculo de Árvores** - Descubra quantas árvores você precisa plantar para compensar suas emissões!
+
+⭐ **Sistema de Pontos** - Ganhe pontos reduzindo suas emissões e suba no ranking!
+
+👉 **[Veja o Guia Rápido das Novas Features](./GUIA_RAPIDO_NOVAS_FEATURES.md)**
+
 ## 📋 Requisitos Implementados
 
 ### Requisitos Funcionais (RF)
@@ -34,6 +46,8 @@ Aplicativo móvel desenvolvido com React Native e Expo para calcular e monitorar
 - **React Navigation** - Navegação entre telas
 - **React Native Chart Kit** - Gráficos e visualizações
 - **Expo Print & Sharing** - Exportação de relatórios
+- **Google Gemini AI** - Análise de hábitos por IA (novo!)
+- **Firestore** - Banco de dados para ranking e pontos
 
 ## 📊 Fatores de Emissão (IPCC)
 
@@ -79,10 +93,11 @@ npm install
 
 3. **Configure o Firebase**
    - Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
-   - Ative a autenticação por e-mail/senha
+   - **Ative a autenticação por e-mail/senha**
+   - **Habilite o Firestore Database** (necessário para ranking e pontos)
+   - Configure as regras de segurança do Firestore
    - Copie as credenciais do Firebase
-   - Renomeie `src/config/firebase.example.js` para `src/config/firebase.js`
-   - Adicione suas credenciais no arquivo `firebase.js`
+   - Adicione suas credenciais no arquivo `src/config/firebase.js`
 
 ```javascript
 const firebaseConfig = {
@@ -95,12 +110,21 @@ const firebaseConfig = {
 };
 ```
 
-4. **Inicie o aplicativo**
+   **📋 IMPORTANTE:** Para usar o sistema de ranking e pontos, você precisa configurar o Firestore. Veja o guia completo em [FIRESTORE_SETUP.md](./FIRESTORE_SETUP.md)
+
+4. **Configure o Google Gemini AI (Opcional)**
+   - Para análises personalizadas por IA, obtenha uma API Key
+   - Acesse: [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Configure no app através da tela de Perfil
+   - Veja instruções completas em [GEMINI_SETUP.md](./GEMINI_SETUP.md)
+   - **Nota**: O app funciona normalmente sem a API Key, com análises básicas
+
+5. **Inicie o aplicativo**
 ```bash
 npm start
 ```
 
-5. **Execute no dispositivo**
+6. **Execute no dispositivo**
    - Para Android: `npm run android`
    - Para iOS: `npm run ios`
    - Ou escaneie o QR Code com o app Expo Go
@@ -122,6 +146,7 @@ npm start
   - Gás (GLP/GN)
 - Cálculo automático de emissões
 - Validação de dados
+- **Sistema de pontos integrado** 🆕
 
 ### Relatórios
 - Gráfico de linha: evolução mensal (últimos 6 meses)
@@ -135,6 +160,43 @@ npm start
 - Organização por categoria
 - Sugestões práticas e acionáveis
 
+### 🏆 Ranking (NOVO!)
+- Ranking global de usuários
+- Filtros por período (Geral, Semanal, Diário)
+- Visualização da sua posição
+- Medalhas para top 3
+- Sistema de pontos gamificado
+- Incentivo à competição amigável pela sustentabilidade
+
+### 👤 Perfil (NOVO!)
+- **Estatísticas Pessoais**
+  - Total de emissões mensais
+  - Pontos acumulados
+  - Breakdown por categoria
+  
+- **🤖 Análise de Hábitos por IA**
+  - Análise personalizada com Google Gemini Pro
+  - Identificação de pontos fortes
+  - Sugestões de áreas de melhoria
+  - Recomendações práticas específicas
+  - Metas personalizadas
+  
+- **🌳 Cálculo de Árvores**
+  - Quantas árvores plantar para compensar emissões
+  - Mensagens motivacionais
+  - Informações educativas sobre impacto
+  
+- **Configurações**
+  - Gerenciar API Key do Gemini
+  - Logout
+
+### ⭐ Sistema de Pontos (NOVO!)
+- Ganhe pontos reduzindo suas emissões
+- 10 pontos por kg de CO₂ reduzido
+- Penalização por aumento de emissões
+- Pontos diários, semanais e totais
+- Integrado ao sistema de ranking
+
 ## 🏗️ Estrutura do Projeto
 
 ```
@@ -147,7 +209,7 @@ mobile-tcc/
 │   │   ├── Input.js
 │   │   └── TipCard.js
 │   ├── config/           # Configurações
-│   │   └── firebase.example.js
+│   │   └── firebase.js
 │   ├── constants/        # Constantes e dados estáticos
 │   │   ├── colors.js
 │   │   └── emissionFactors.js
@@ -158,18 +220,27 @@ mobile-tcc/
 │   ├── screens/          # Telas do aplicativo
 │   │   ├── HomeScreen.js
 │   │   ├── LoginScreen.js
+│   │   ├── ProfileScreen.js      # 🆕 Perfil com IA
+│   │   ├── RankingScreen.js       # 🆕 Ranking de usuários
 │   │   ├── RegisterScreen.js
 │   │   ├── ReportsScreen.js
 │   │   ├── SignupScreen.js
 │   │   └── TipsScreen.js
 │   └── services/         # Serviços e lógica de negócio
 │       ├── carbonCalculator.js
+│       ├── geminiService.js       # 🆕 Integração com Gemini AI
+│       ├── pointsService.js       # 🆕 Sistema de pontos
 │       ├── storageService.js
-│       └── tipsService.js
-├── App.js               # Componente raiz
-├── app.json            # Configuração do Expo
-├── package.json        # Dependências
-└── README.md          # Este arquivo
+│       ├── tipsService.js
+│       └── treeService.js         # 🆕 Cálculo de árvores
+├── App.js                         # Componente raiz
+├── app.json                       # Configuração do Expo
+├── package.json                   # Dependências
+├── README.md                      # Este arquivo
+├── NOVAS_FUNCIONALIDADES.md       # 🆕 Documentação detalhada
+├── FIRESTORE_SETUP.md             # 🆕 Setup do Firestore
+├── GEMINI_SETUP.md                # 🆕 Setup da IA
+└── GUIA_RAPIDO_NOVAS_FEATURES.md  # 🆕 Guia rápido
 ```
 
 ## 🎨 Design e UX
@@ -192,11 +263,14 @@ mobile-tcc/
 
 - [ ] Modo offline completo
 - [ ] Notificações push para lembretes
-- [ ] Gamificação (badges e conquistas)
+- [ ] Badges e conquistas adicionais
 - [ ] Comparação com média regional/nacional
 - [ ] Integração com APIs de transporte público
 - [ ] Modo escuro (dark mode)
 - [ ] Suporte a múltiplos idiomas
+- [ ] Sistema de amigos e compartilhamento
+- [ ] Desafios semanais/mensais
+- [ ] Histórico detalhado de pontos
 
 ## 🤝 Contribuindo
 

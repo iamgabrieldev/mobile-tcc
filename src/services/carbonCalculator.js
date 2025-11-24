@@ -70,6 +70,36 @@ class CarbonCalculatorService {
   }
 
   /**
+   * Calcula emissões de atividades domésticas
+   * @param {string} activityType - Tipo de atividade
+   * @param {number} quantity - Quantidade (banhos, ciclos, usos, dias)
+   * @returns {number} Emissões em kg CO₂
+   */
+  calculateDomesticActivity(activityType, quantity) {
+    const factor = EMISSION_FACTORS.DOMESTIC_ACTIVITIES[activityType];
+    if (!factor) {
+      throw new Error('Tipo de atividade inválido');
+    }
+    const emissions = factor.factor * quantity;
+    return this.roundToTwoDecimals(emissions);
+  }
+
+  /**
+   * Calcula redução de emissões por reciclagem
+   * @param {string} wasteType - Tipo de material reciclado
+   * @param {number} quantity - Quantidade em kg
+   * @returns {number} Redução de emissões em kg CO₂ (valor negativo)
+   */
+  calculateWaste(wasteType, quantity) {
+    const factor = EMISSION_FACTORS.WASTE[wasteType];
+    if (!factor) {
+      throw new Error('Tipo de resíduo inválido');
+    }
+    const emissions = factor.factor * quantity; // Já será negativo
+    return this.roundToTwoDecimals(emissions);
+  }
+
+  /**
    * Calcula emissões totais de um conjunto de consumos
    * @param {Object} consumptions - Objeto com consumos por categoria
    * @returns {Object} Objeto com emissões por categoria e total
@@ -80,7 +110,9 @@ class CarbonCalculatorService {
       transport_land: 0,
       transport_air: 0,
       energy: 0,
-      gas: 0
+      gas: 0,
+      domestic_activities: 0,
+      waste: 0
     };
 
     // Transporte terrestre
@@ -112,8 +144,25 @@ class CarbonCalculatorService {
       });
     }
 
+    // Atividades Domésticas
+    if (consumptions.domestic_activities && Array.isArray(consumptions.domestic_activities)) {
+      consumptions.domestic_activities.forEach(item => {
+        const emission = this.calculateDomesticActivity(item.type, item.quantity);
+        breakdown.domestic_activities += emission;
+      });
+    }
+
+    // Resíduos/Reciclagem (valores negativos reduzem o total)
+    if (consumptions.waste && Array.isArray(consumptions.waste)) {
+      consumptions.waste.forEach(item => {
+        const emission = this.calculateWaste(item.type, item.quantity);
+        breakdown.waste += emission;
+      });
+    }
+
     // Calcular total
-    total = breakdown.transport_land + breakdown.transport_air + breakdown.energy + breakdown.gas;
+    total = breakdown.transport_land + breakdown.transport_air + breakdown.energy + 
+            breakdown.gas + breakdown.domestic_activities + breakdown.waste;
 
     return {
       total: this.roundToTwoDecimals(total),
@@ -121,7 +170,9 @@ class CarbonCalculatorService {
         transport_land: this.roundToTwoDecimals(breakdown.transport_land),
         transport_air: this.roundToTwoDecimals(breakdown.transport_air),
         energy: this.roundToTwoDecimals(breakdown.energy),
-        gas: this.roundToTwoDecimals(breakdown.gas)
+        gas: this.roundToTwoDecimals(breakdown.gas),
+        domestic_activities: this.roundToTwoDecimals(breakdown.domestic_activities),
+        waste: this.roundToTwoDecimals(breakdown.waste)
       }
     };
   }

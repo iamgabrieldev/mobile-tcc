@@ -12,11 +12,13 @@ import Card from '../components/Card';
 import { COLORS } from '../constants/colors';
 import tipsService from '../services/tipsService';
 import storageService from '../services/storageService';
+import treeService from '../services/treeService';
 
 const TipsScreen = () => {
   const [personalizedTips, setPersonalizedTips] = useState([]);
   const [allTips, setAllTips] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [treeSuggestions, setTreeSuggestions] = useState([]);
 
   useEffect(() => {
     loadTips();
@@ -50,6 +52,11 @@ const TipsScreen = () => {
 
         const tips = tipsService.getPersonalizedTips(totals);
         setPersonalizedTips(tips);
+
+        // Calcular árvores necessárias e obter sugestões
+        const treeData = treeService.calculateTreesForMonthly(totals.total);
+        const suggestions = treeService.getSuggestions(treeData.treesRounded);
+        setTreeSuggestions(suggestions);
       }
 
       setAllTips(tipsService.getAllTips());
@@ -136,6 +143,34 @@ const TipsScreen = () => {
           </>
         )}
       </View>
+
+      {/* Compensação por Árvores */}
+      {treeSuggestions.length > 0 && (
+        <Card style={styles.treeCard}>
+          <View style={styles.infoHeader}>
+            <MaterialCommunityIcons name="tree" size={32} color={COLORS.success} />
+            <Text style={styles.treeCardTitle}>🌳 Compensação por Árvores</Text>
+          </View>
+          <Text style={styles.treeCardSubtitle}>
+            Além de reduzir emissões, você pode compensá-las plantando árvores:
+          </Text>
+          {treeSuggestions.map((suggestion, index) => (
+            <View key={index} style={styles.treeSuggestion}>
+              <Text style={styles.treeSuggestionIcon}>{suggestion.icon}</Text>
+              <View style={styles.treeSuggestionContent}>
+                <Text style={styles.treeSuggestionTitle}>{suggestion.title}</Text>
+                <Text style={styles.treeSuggestionImpact}>{suggestion.impact}</Text>
+              </View>
+            </View>
+          ))}
+          <View style={styles.treeInfoBox}>
+            <MaterialCommunityIcons name="information-outline" size={20} color={COLORS.success} />
+            <Text style={styles.treeInfoText}>
+              Uma árvore adulta absorve aproximadamente 22 kg de CO₂ por ano
+            </Text>
+          </View>
+        </Card>
+      )}
 
       {/* Informações adicionais */}
       <Card style={styles.infoCard}>
@@ -245,6 +280,64 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: '600',
+  },
+  treeCard: {
+    margin: 20,
+    marginTop: 0,
+    backgroundColor: '#E8F5E9',
+    padding: 16,
+  },
+  treeCardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    marginLeft: 8,
+  },
+  treeCardSubtitle: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginTop: 12,
+    marginBottom: 16,
+  },
+  treeSuggestion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  treeSuggestionIcon: {
+    fontSize: 32,
+    marginRight: 12,
+  },
+  treeSuggestionContent: {
+    flex: 1,
+  },
+  treeSuggestionTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginBottom: 4,
+  },
+  treeSuggestionImpact: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+  },
+  treeInfoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    padding: 12,
+    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    borderRadius: 8,
+  },
+  treeInfoText: {
+    fontSize: 13,
+    color: COLORS.text,
+    marginLeft: 8,
+    flex: 1,
+    fontStyle: 'italic',
   },
 });
 

@@ -84,6 +84,68 @@ export const EMISSION_FACTORS = {
       unit: 'kg CO₂/m³',
       category: 'gas'
     }
+  },
+
+  // Atividades Domésticas (kg CO₂/unidade)
+  DOMESTIC_ACTIVITIES: {
+    BANHO_QUENTE: {
+      label: 'Banho quente (10 minutos)',
+      factor: 2.0,
+      unit: 'kg CO₂/banho',
+      category: 'domestic_activities'
+    },
+    LAVAGEM_ROUPAS: {
+      label: 'Lavagem de roupas (1 ciclo)',
+      factor: 0.275,
+      unit: 'kg CO₂/ciclo',
+      category: 'domestic_activities'
+    },
+    SECADORA_ROUPAS: {
+      label: 'Secadora de roupas (1 ciclo)',
+      factor: 1.0,
+      unit: 'kg CO₂/ciclo',
+      category: 'domestic_activities'
+    },
+    FORNO_ELETRICO: {
+      label: 'Uso de forno elétrico (1,5 kWh)',
+      factor: 0.126,
+      unit: 'kg CO₂/uso',
+      category: 'domestic_activities'
+    },
+    CONSUMO_ALIMENTOS: {
+      label: 'Consumo diário médio de alimentos',
+      factor: 4.5,
+      unit: 'kg CO₂/dia',
+      category: 'domestic_activities'
+    }
+  },
+
+  // Resíduos/Reciclagem (kg CO₂ economizado/kg - valores negativos indicam redução)
+  WASTE: {
+    RECICLAGEM_PAPEL: {
+      label: 'Reciclagem de papel',
+      factor: -1.8,
+      unit: 'kg CO₂/kg',
+      category: 'waste'
+    },
+    RECICLAGEM_PLASTICO: {
+      label: 'Reciclagem de plástico',
+      factor: -1.5,
+      unit: 'kg CO₂/kg',
+      category: 'waste'
+    },
+    RECICLAGEM_VIDRO: {
+      label: 'Reciclagem de vidro',
+      factor: -0.315,
+      unit: 'kg CO₂/kg',
+      category: 'waste'
+    },
+    RECICLAGEM_METAL: {
+      label: 'Reciclagem de metal',
+      factor: -9.0,
+      unit: 'kg CO₂/kg',
+      category: 'waste'
+    }
   }
 };
 
@@ -92,7 +154,9 @@ export const CONSUMPTION_CATEGORIES = {
   TRANSPORT_LAND: 'Transporte Terrestre',
   TRANSPORT_AIR: 'Transporte Aéreo',
   ENERGY: 'Energia Elétrica',
-  GAS: 'Gás'
+  GAS: 'Gás',
+  DOMESTIC_ACTIVITIES: 'Atividades Domésticas',
+  WASTE: 'Resíduos/Reciclagem'
 };
 
 // Função auxiliar para obter todos os fatores de uma categoria
@@ -106,6 +170,10 @@ export const getFactorsByCategory = (category) => {
       return EMISSION_FACTORS.ENERGY;
     case 'GAS':
       return EMISSION_FACTORS.GAS;
+    case 'DOMESTIC_ACTIVITIES':
+      return EMISSION_FACTORS.DOMESTIC_ACTIVITIES;
+    case 'WASTE':
+      return EMISSION_FACTORS.WASTE;
     default:
       return {};
   }

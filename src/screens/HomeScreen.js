@@ -13,13 +13,16 @@ import { useAuth } from '../contexts/AuthContext';
 import EmissionCard from '../components/EmissionCard';
 import Card from '../components/Card';
 import Button from '../components/Button';
+import TreeCompensationCard from '../components/TreeCompensationCard';
 import storageService from '../services/storageService';
+import treeService from '../services/treeService';
 import { COLORS } from '../constants/colors';
 
 const HomeScreen = ({ navigation }) => {
   const { user, logout, isEmailVerified } = useAuth();
   const [todayEmissions, setTodayEmissions] = useState(null);
   const [monthlyEmissions, setMonthlyEmissions] = useState(0);
+  const [treesNeeded, setTreesNeeded] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const loadData = async () => {
@@ -36,6 +39,14 @@ const HomeScreen = ({ navigation }) => {
       
       const monthTotal = monthRecords.reduce((sum, r) => sum + r.emissions.total, 0);
       setMonthlyEmissions(monthTotal);
+
+      // Calcular árvores necessárias para compensar emissões mensais
+      if (monthTotal > 0) {
+        const treeData = treeService.calculateTreesForMonthly(monthTotal);
+        setTreesNeeded(treeData);
+      } else {
+        setTreesNeeded(null);
+      }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     }
@@ -152,6 +163,31 @@ const HomeScreen = ({ navigation }) => {
                 percentage={getPercentage(todayEmissions.breakdown.gas, todayEmissions.total)}
               />
             </View>
+
+            {(todayEmissions.breakdown.domestic_activities > 0 || todayEmissions.breakdown.waste !== 0) && (
+              <View style={styles.cardsRow}>
+                {todayEmissions.breakdown.domestic_activities > 0 && (
+                  <EmissionCard
+                    icon="home"
+                    title="Atividades Domésticas"
+                    value={todayEmissions.breakdown.domestic_activities}
+                    unit="kg"
+                    color={COLORS.chart.domestic}
+                    percentage={getPercentage(todayEmissions.breakdown.domestic_activities, todayEmissions.total)}
+                  />
+                )}
+                {todayEmissions.breakdown.waste !== 0 && (
+                  <EmissionCard
+                    icon="recycle"
+                    title="Resíduos/Reciclagem"
+                    value={todayEmissions.breakdown.waste}
+                    unit="kg"
+                    color={COLORS.chart.waste}
+                    percentage={getPercentage(Math.abs(todayEmissions.breakdown.waste), todayEmissions.total)}
+                  />
+                )}
+              </View>
+            )}
           </>
         ) : (
           <Card style={styles.emptyCard}>
@@ -178,6 +214,14 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </Card>
       </View>
+
+      {/* Compensação por Árvores */}
+      {monthlyEmissions > 0 && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>🌳 Compensação Ambiental</Text>
+          <TreeCompensationCard treesData={treesNeeded} />
+        </View>
+      )}
 
       <View style={styles.actions}>
         <Button
