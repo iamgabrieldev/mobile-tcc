@@ -15,7 +15,7 @@ reductions through a points-based ranking.
 **Authors**
 
 - André Luiz Przybysz
-- Carlos Eduardo Nogueira de Freitas Veiga
+- Gabriel Fernando Sousa de Oliveira
 - Regina Negri Pagani
 - Eduardo F. Damasceno
 - Eduarda Maganha de Almeida
