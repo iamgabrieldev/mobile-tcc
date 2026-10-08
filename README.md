@@ -1,299 +1,303 @@
-# 🌱 Calculadora de Pegada de Carbono
+# Carbon Footprint Calculator
 
-Aplicativo móvel desenvolvido com React Native e Expo para calcular e monitorar a pegada de carbono pessoal baseado em hábitos diários.
+**Personal Carbon Footprint Tracking on Mobile**
+(*Calculadora de Pegada de Carbono*)
 
-## 🎉 **NOVIDADES! Versão 2.0**
+A mobile application, built with React Native and Expo, that calculates and monitors a person's
+carbon footprint from their daily habits. Users record their daily consumption of transport,
+electricity and gas, and the application converts it into CO₂ emissions using emission factors
+based on IPCC guidelines, tracks the monthly trend, suggests ways to reduce emissions and rewards
+reductions through a points-based ranking.
 
-🏆 **Ranking Global** - Compete com outros usuários e veja quem está reduzindo mais CO₂!
+> This application was developed as an undergraduate final project (*Trabalho de Conclusão de
+> Curso*).
 
-🤖 **Análise por IA** - Receba insights personalizados sobre seus hábitos usando Google Gemini Pro!
+**Authors**
 
-🌳 **Cálculo de Árvores** - Descubra quantas árvores você precisa plantar para compensar suas emissões!
+- André Luiz Przybysz
+- Carlos Eduardo Nogueira de Freitas Veiga
+- Regina Negri Pagani
+- Eduardo F. Damasceno
+- Eduarda Maganha de Almeida
 
-⭐ **Sistema de Pontos** - Ganhe pontos reduzindo suas emissões e suba no ranking!
+## Overview
 
-👉 **[Veja o Guia Rápido das Novas Features](./GUIA_RAPIDO_NOVAS_FEATURES.md)**
+The application covers the full cycle of personal emissions tracking. Daily consumption is
+recorded per category and converted into emissions locally on the device. Reports show how
+emissions evolve month by month and how they are distributed across categories, and the data
+can be exported to PDF or CSV. Tips are generated from the user's own consumption pattern.
 
-## 📋 Requisitos Implementados
+Version 2.0 added four features on top of this core: a global ranking, AI-based habit analysis
+with Google Gemini Pro, an estimate of how many trees would offset the user's emissions, and a
+points system that rewards reductions. A quick guide to these features is available in
+[GUIA_RAPIDO_NOVAS_FEATURES.md](./GUIA_RAPIDO_NOVAS_FEATURES.md).
 
-### Requisitos Funcionais (RF)
-- ✅ **RF01**: Registro de consumo diário (transporte, energia, alimentação e gás)
-- ✅ **RF02**: Cálculo automático de pegada de carbono usando fatores IPCC
-- ✅ **RF03**: Relatórios comparativos mensais com gráficos
-- ✅ **RF04**: Sugestões de dicas personalizadas para redução de emissões
-- ✅ **RF05**: Exportação de dados em PDF/CSV
+**Interface language.** The application interface is written in Brazilian Portuguese. The source
+code and this README are in English.
 
-### Requisitos Não-Funcionais (RNF)
-- ✅ **RNF01**: Tempo de resposta < 2s para cálculos locais
-- ✅ **RNF02**: Alta disponibilidade (armazenamento local + Firebase)
-- ✅ **RNF03**: Compatibilidade com Android 10+ e iOS 14+ (via Expo)
-- ✅ **RNF04**: Armazenamento seguro com Firebase Auth
-- ✅ **RNF05**: Interface acessível e responsiva
+## Features
 
-### Regras de Negócio (RN)
-- ✅ **RN01**: Fatores de emissão seguindo diretrizes IPCC 2023
-- ✅ **RN02**: Verificação de e-mail obrigatória
-- ✅ **RN03**: Dados comparativos anonimizados
-- ✅ **RN04**: Cálculos arredondados para 2 casas decimais
-- ✅ **RN05**: Histórico mantido por 24 meses
+### Home
 
-## 🚀 Tecnologias Utilizadas
+Shows the emissions for the current day and a monthly summary, with cards breaking emissions
+down by category and shortcuts to consumption recording and reports.
 
-- **React Native** - Framework mobile
-- **Expo** - Plataforma de desenvolvimento
-- **Firebase** - Autenticação e armazenamento
-- **AsyncStorage** - Armazenamento local
-- **React Navigation** - Navegação entre telas
-- **React Native Chart Kit** - Gráficos e visualizações
-- **Expo Print & Sharing** - Exportação de relatórios
-- **Google Gemini AI** - Análise de hábitos por IA (novo!)
-- **Firestore** - Banco de dados para ranking e pontos
+### Consumption recording
 
-## 📊 Fatores de Emissão (IPCC)
+An input form for daily consumption, organised in four categories: land transport (with vehicle
+type selection), air transport (domestic or international), electricity (kWh) and gas (LPG or
+natural gas). Emissions are calculated automatically, input is validated, and every record feeds
+the points system.
 
-### Transporte Terrestre (kg CO₂/km)
-- Carro pequeno (até 1.4L) - Gasolina: 0,192
-- Carro médio (1.5 a 2.0L) - Gasolina: 0,232
-- Carro grande (>2.0L) - Gasolina: 0,250
-- Carro - Diesel: 0,250
-- Ônibus urbano - Diesel: 0,105
-- Ônibus rodoviário - Diesel: 0,060
+### Reports
 
-### Transporte Aéreo (kg CO₂/km)
-- Voo nacional (ida e volta): 0,150
-- Voo internacional (ida e volta): 0,200
+A line chart of the monthly trend over the last six months, a pie chart of the distribution per
+category, a detailed statistical summary, and export to PDF and CSV.
 
-### Energia Elétrica (kg CO₂/kWh)
-- Média Brasil: 0,084
+### Personalised tips
 
-### Gás (kg CO₂/unidade)
-- Gás de cozinha (GLP): 2,983 kg CO₂/kg
-- Gás natural (GN): 2,000 kg CO₂/m³
+Tips based on the user's consumption pattern, classified by impact (very high, high, medium,
+low) and organised by category, with practical and actionable suggestions.
 
-## 🔧 Instalação e Configuração
+### Ranking
 
-### Pré-requisitos
-- Node.js 18+
-- npm ou yarn
-- Expo CLI
-- Conta Firebase (para autenticação)
+A global ranking of users with filters by period (overall, weekly, daily), the user's own
+position, medals for the top three and points-based gamification that encourages friendly
+competition around sustainability.
 
-### Passo a Passo
+### Profile
 
-1. **Clone o repositório**
-```bash
-git clone <url-do-repositorio>
-cd mobile-tcc
+Personal statistics (total monthly emissions, accumulated points and breakdown per category),
+AI habit analysis, the tree offset calculation and settings (Gemini API key management and
+logout).
+
+The AI analysis uses Google Gemini Pro to produce a personalised review of the user's habits:
+strengths, areas for improvement, specific practical recommendations and personalised goals.
+Without an API key the application falls back to a basic analysis.
+
+The tree calculation estimates how many trees would have to be planted to offset the user's
+emissions, together with motivational messages and educational information about the impact.
+
+### Points system
+
+Users earn 10 points per kg of CO₂ reduced and lose points when their emissions increase.
+Points are tracked daily, weekly and in total, and they determine the user's position in the
+ranking.
+
+## Requirements
+
+All requirements listed below are implemented.
+
+### Functional requirements
+
+| ID   | Requirement |
+|------|-------------|
+| FR01 | Daily consumption recording (transport, energy, food and gas) |
+| FR02 | Automatic carbon footprint calculation using IPCC factors |
+| FR03 | Monthly comparative reports with charts |
+| FR04 | Personalised tips for reducing emissions |
+| FR05 | Data export to PDF and CSV |
+
+### Non-functional requirements
+
+| ID    | Requirement |
+|-------|-------------|
+| NFR01 | Response time under 2 s for local calculations |
+| NFR02 | High availability (local storage plus Firebase) |
+| NFR03 | Compatibility with Android 10+ and iOS 14+ (through Expo) |
+| NFR04 | Secure storage with Firebase Auth |
+| NFR05 | Accessible and responsive interface |
+
+### Business rules
+
+| ID   | Rule |
+|------|------|
+| BR01 | Emission factors follow the IPCC 2023 guidelines |
+| BR02 | E-mail verification is mandatory |
+| BR03 | Comparative data is anonymised |
+| BR04 | Calculations are rounded to two decimal places |
+| BR05 | History is kept for 24 months |
+
+## Emission factors
+
+The factors are defined in `src/constants/emissionFactors.js`.
+
+| Category | Source | Factor | Unit |
+|----------|--------|--------|------|
+| Land transport | Small car (up to 1.4 L), petrol | 0.192 | kg CO₂/km |
+| Land transport | Medium car (1.5 to 2.0 L), petrol | 0.232 | kg CO₂/km |
+| Land transport | Large car (over 2.0 L), petrol | 0.250 | kg CO₂/km |
+| Land transport | Car, diesel | 0.250 | kg CO₂/km |
+| Land transport | Urban bus, diesel | 0.105 | kg CO₂/km |
+| Land transport | Intercity bus, diesel | 0.060 | kg CO₂/km |
+| Air transport | Domestic flight (round trip) | 0.150 | kg CO₂/km |
+| Air transport | International flight (round trip) | 0.200 | kg CO₂/km |
+| Electricity | Brazilian average | 0.084 | kg CO₂/kWh |
+| Gas | Liquefied petroleum gas (LPG, cooking gas) | 2.983 | kg CO₂/kg |
+| Gas | Natural gas (NG) | 2.000 | kg CO₂/m³ |
+
+## Architecture
+
+The application is a single Expo project. Emission calculations run locally on the device, and
+external services are used for authentication, shared data and AI analysis:
+
+```
+User (Expo app)
+   |
+   |-- AsyncStorage          local data and local calculations
+   |-- Firebase Auth         e-mail/password login and e-mail verification
+   |-- Firestore             points and ranking
+   |-- Google Gemini API     habit analysis (optional)
 ```
 
-2. **Instale as dependências**
+Business logic lives in `src/services/`:
+
+| Module | Responsibility |
+|--------|----------------|
+| `carbonCalculator` | Converts recorded consumption into CO₂ emissions |
+| `storageService`   | Local persistence |
+| `tipsService`      | Personalised tips |
+| `pointsService`    | Points system |
+| `geminiService`    | Integration with Google Gemini |
+| `treeService`      | Tree offset calculation |
+
+Authentication state is shared across screens through `src/contexts/AuthContext.js`, and
+navigation is configured in `src/navigation/AppNavigator.js`.
+
+## Stack
+
+React Native, Expo, Firebase (Auth and Firestore), AsyncStorage, React Navigation,
+React Native Chart Kit, Expo Print and Expo Sharing, Google Gemini.
+
+## Getting started
+
+### Prerequisites
+
+Node.js 18+, npm or yarn, Expo CLI and a Firebase account.
+
+### Installation
+
 ```bash
+git clone <repository-url>
+cd mobile-tcc
 npm install
 ```
 
-3. **Configure o Firebase**
-   - Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
-   - **Ative a autenticação por e-mail/senha**
-   - **Habilite o Firestore Database** (necessário para ranking e pontos)
-   - Configure as regras de segurança do Firestore
-   - Copie as credenciais do Firebase
-   - Adicione suas credenciais no arquivo `src/config/firebase.js`
+### Firebase configuration
+
+1. Create a project in the [Firebase Console](https://console.firebase.google.com/).
+2. Enable e-mail/password authentication.
+3. Enable Firestore Database, which is required for the ranking and the points system.
+4. Configure the Firestore security rules.
+5. Copy the project credentials into `src/config/firebase.js`:
 
 ```javascript
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 ```
 
-   **📋 IMPORTANTE:** Para usar o sistema de ranking e pontos, você precisa configurar o Firestore. Veja o guia completo em [FIRESTORE_SETUP.md](./FIRESTORE_SETUP.md)
+The full Firestore setup guide is in [FIRESTORE_SETUP.md](./FIRESTORE_SETUP.md).
 
-4. **Configure o Google Gemini AI (Opcional)**
-   - Para análises personalizadas por IA, obtenha uma API Key
-   - Acesse: [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Configure no app através da tela de Perfil
-   - Veja instruções completas em [GEMINI_SETUP.md](./GEMINI_SETUP.md)
-   - **Nota**: O app funciona normalmente sem a API Key, com análises básicas
+### Google Gemini configuration (optional)
 
-5. **Inicie o aplicativo**
+AI habit analysis requires a Gemini API key, which can be obtained from
+[Google AI Studio](https://makersuite.google.com/app/apikey). The key is entered in the
+application itself, on the Profile screen. Full instructions are in
+[GEMINI_SETUP.md](./GEMINI_SETUP.md).
+
+The application works normally without a key, using the basic analysis instead.
+
+### Running
+
 ```bash
 npm start
 ```
 
-6. **Execute no dispositivo**
-   - Para Android: `npm run android`
-   - Para iOS: `npm run ios`
-   - Ou escaneie o QR Code com o app Expo Go
+Then run on a device or emulator:
 
-## 📱 Funcionalidades
+```bash
+npm run android
+npm run ios
+```
 
-### Tela Inicial (Home)
-- Visualização das emissões do dia atual
-- Resumo mensal de emissões
-- Cards com breakdown por categoria
-- Acesso rápido para registro e relatórios
+Alternatively, scan the QR Code shown by `npm start` with the Expo Go app.
 
-### Registro de Consumo
-- Formulário intuitivo para registro diário
-- Categorias:
-  - Transporte Terrestre (com seleção de tipo de veículo)
-  - Transporte Aéreo (nacional/internacional)
-  - Energia Elétrica (kWh)
-  - Gás (GLP/GN)
-- Cálculo automático de emissões
-- Validação de dados
-- **Sistema de pontos integrado** 🆕
+## Design
 
-### Relatórios
-- Gráfico de linha: evolução mensal (últimos 6 meses)
-- Gráfico de pizza: distribuição por categoria
-- Resumo estatístico detalhado
-- Exportação em PDF e CSV
+The interface follows Material Design, with a green colour scheme (sustainability) and orange
+accents. It uses adequate contrast and legible font sizes, adapts to different screen sizes,
+and gives clear visual feedback through loading states and confirmations.
 
-### Dicas Personalizadas
-- Dicas baseadas no padrão de consumo
-- Categorização por impacto (Muito Alta, Alta, Média, Baixa)
-- Organização por categoria
-- Sugestões práticas e acionáveis
+## Security and privacy
 
-### 🏆 Ranking (NOVO!)
-- Ranking global de usuários
-- Filtros por período (Geral, Semanal, Diário)
-- Visualização da sua posição
-- Medalhas para top 3
-- Sistema de pontos gamificado
-- Incentivo à competição amigável pela sustentabilidade
+- Authentication through Firebase Auth, with mandatory e-mail verification.
+- Encrypted local storage (AsyncStorage).
+- Personal data is not shared with other users; comparative data is anonymised.
+- Compliance with the LGPD (*Lei Geral de Proteção de Dados*, Brazil's General Data Protection
+  Law).
 
-### 👤 Perfil (NOVO!)
-- **Estatísticas Pessoais**
-  - Total de emissões mensais
-  - Pontos acumulados
-  - Breakdown por categoria
-  
-- **🤖 Análise de Hábitos por IA**
-  - Análise personalizada com Google Gemini Pro
-  - Identificação de pontos fortes
-  - Sugestões de áreas de melhoria
-  - Recomendações práticas específicas
-  - Metas personalizadas
-  
-- **🌳 Cálculo de Árvores**
-  - Quantas árvores plantar para compensar emissões
-  - Mensagens motivacionais
-  - Informações educativas sobre impacto
-  
-- **Configurações**
-  - Gerenciar API Key do Gemini
-  - Logout
+## Roadmap
 
-### ⭐ Sistema de Pontos (NOVO!)
-- Ganhe pontos reduzindo suas emissões
-- 10 pontos por kg de CO₂ reduzido
-- Penalização por aumento de emissões
-- Pontos diários, semanais e totais
-- Integrado ao sistema de ranking
+Planned improvements, not yet implemented:
 
-## 🏗️ Estrutura do Projeto
+- Full offline mode
+- Push notifications for reminders
+- Additional badges and achievements
+- Comparison with regional and national averages
+- Integration with public transport APIs
+- Dark mode
+- Multi-language support
+- Friends and sharing
+- Weekly and monthly challenges
+- Detailed points history
+
+## Supplementary documentation
+
+| File | Content |
+|------|---------|
+| [GUIA_RAPIDO_NOVAS_FEATURES.md](./GUIA_RAPIDO_NOVAS_FEATURES.md) | Quick guide to the version 2.0 features |
+| [NOVAS_FUNCIONALIDADES.md](./NOVAS_FUNCIONALIDADES.md) | Detailed documentation of the version 2.0 features |
+| [FIRESTORE_SETUP.md](./FIRESTORE_SETUP.md) | Firestore setup |
+| [GEMINI_SETUP.md](./GEMINI_SETUP.md) | Google Gemini setup |
+
+## Repository layout
 
 ```
 mobile-tcc/
-├── src/
-│   ├── components/        # Componentes reutilizáveis
-│   │   ├── Button.js
-│   │   ├── Card.js
-│   │   ├── EmissionCard.js
-│   │   ├── Input.js
-│   │   └── TipCard.js
-│   ├── config/           # Configurações
-│   │   └── firebase.js
-│   ├── constants/        # Constantes e dados estáticos
-│   │   ├── colors.js
-│   │   └── emissionFactors.js
-│   ├── contexts/         # Contextos React
-│   │   └── AuthContext.js
-│   ├── navigation/       # Configuração de navegação
-│   │   └── AppNavigator.js
-│   ├── screens/          # Telas do aplicativo
-│   │   ├── HomeScreen.js
-│   │   ├── LoginScreen.js
-│   │   ├── ProfileScreen.js      # 🆕 Perfil com IA
-│   │   ├── RankingScreen.js       # 🆕 Ranking de usuários
-│   │   ├── RegisterScreen.js
-│   │   ├── ReportsScreen.js
-│   │   ├── SignupScreen.js
-│   │   └── TipsScreen.js
-│   └── services/         # Serviços e lógica de negócio
-│       ├── carbonCalculator.js
-│       ├── geminiService.js       # 🆕 Integração com Gemini AI
-│       ├── pointsService.js       # 🆕 Sistema de pontos
-│       ├── storageService.js
-│       ├── tipsService.js
-│       └── treeService.js         # 🆕 Cálculo de árvores
-├── App.js                         # Componente raiz
-├── app.json                       # Configuração do Expo
-├── package.json                   # Dependências
-├── README.md                      # Este arquivo
-├── NOVAS_FUNCIONALIDADES.md       # 🆕 Documentação detalhada
-├── FIRESTORE_SETUP.md             # 🆕 Setup do Firestore
-├── GEMINI_SETUP.md                # 🆕 Setup da IA
-└── GUIA_RAPIDO_NOVAS_FEATURES.md  # 🆕 Guia rápido
+  src/
+    components/    reusable components (Button, Card, EmissionCard, Input, TipCard)
+    config/        Firebase configuration
+    constants/     colours and emission factors
+    contexts/      authentication context
+    navigation/    navigation setup
+    screens/       Home, Login, Signup, Register, Reports, Tips, Ranking, Profile
+    services/      calculation, storage, tips, points, Gemini and tree services
+  App.js           root component
+  app.json         Expo configuration
+  package.json     dependencies
 ```
 
-## 🎨 Design e UX
+## Contributing
 
-- **Material Design**: Interface moderna e intuitiva
-- **Cores**: Esquema verde (sustentabilidade) com acentos laranja
-- **Acessibilidade**: Contraste adequado e tamanhos de fonte legíveis
-- **Responsividade**: Adaptável a diferentes tamanhos de tela
-- **Feedback Visual**: Loading states e confirmações claras
+Contributions are welcome:
 
-## 🔐 Segurança
+1. Fork the project.
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-- Autenticação via Firebase Auth
-- Verificação de e-mail obrigatória
-- Armazenamento local criptografado (AsyncStorage)
-- Dados pessoais não são compartilhados
-- Conformidade com LGPD
+## Support
 
-## 📈 Próximas Melhorias
+For questions or support, open an issue in the repository.
 
-- [ ] Modo offline completo
-- [ ] Notificações push para lembretes
-- [ ] Badges e conquistas adicionais
-- [ ] Comparação com média regional/nacional
-- [ ] Integração com APIs de transporte público
-- [ ] Modo escuro (dark mode)
-- [ ] Suporte a múltiplos idiomas
-- [ ] Sistema de amigos e compartilhamento
-- [ ] Desafios semanais/mensais
-- [ ] Histórico detalhado de pontos
+## License
 
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Por favor:
-
-1. Faça fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto foi desenvolvido para fins acadêmicos (TCC).
-
-## 👥 Autores
-
-Desenvolvido como Trabalho de Conclusão de Curso.
-
-## 📞 Suporte
-
-Para dúvidas ou suporte, abra uma issue no repositório.
-
----
-
-**Faça sua parte pelo planeta! 🌍**
+This project was developed for academic purposes as an undergraduate final project
+(*Trabalho de Conclusão de Curso*).
